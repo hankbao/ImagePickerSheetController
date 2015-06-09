@@ -148,7 +148,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
         
         let action = actions[indexPath.row]
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UITableViewCell.self), forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(UITableViewCell.self), forIndexPath: indexPath)
         cell.textLabel?.textAlignment = .Center
         cell.textLabel?.textColor = tableView.tintColor
         cell.textLabel?.font = UIFont.systemFontOfSize(21)
@@ -169,7 +169,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
         
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
         
-        actions[indexPath.row].handle(numberOfImages: numberOfSelectedImages)
+        actions[indexPath.row].handle(numberOfSelectedImages)
     }
     
     // MARK: - UICollectionViewDataSource
@@ -199,7 +199,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
         let view = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: NSStringFromClass(PreviewSupplementaryView.self), forIndexPath: indexPath) as! PreviewSupplementaryView
         view.userInteractionEnabled = false
         view.buttonInset = UIEdgeInsetsMake(0.0, collectionViewCheckmarkInset, collectionViewCheckmarkInset, 0.0)
-        view.selected = contains(selectedImageIndices, indexPath.section)
+        view.selected = selectedImageIndices.contains(indexPath.section)
         
         supplementaryViews[indexPath.section] = view
         
@@ -236,7 +236,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
     
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
-        let selected = contains(selectedImageIndices, indexPath.section)
+        let selected = selectedImageIndices.contains(indexPath.section)
         
         if !selected {
             selectedImageIndices.append(indexPath.section)
@@ -269,7 +269,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
             }
         }
         else {
-            selectedImageIndices.removeAtIndex(find(selectedImageIndices, indexPath.section)!)
+            selectedImageIndices.removeAtIndex(selectedImageIndices.indexOf(indexPath.section)!)
             reloadButtons()
         }
         
@@ -334,7 +334,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
         // Workaround because PHImageManager.requestImageForAsset doesn't work for burst images
         if asset.representsBurst {
             imageManager.requestImageDataForAsset(asset, options: options) { data, _, _, _ in
-                let image = UIImage(data: data)
+                let image = UIImage(data: data!)
                 completion(image: image)
             }
         }
@@ -383,7 +383,7 @@ public class ImagePickerSheetController: UIViewController, UITableViewDataSource
         
         let cancelActions = actions.filter { $0.style == ImageActionStyle.Cancel }
         if let cancelAction = cancelActions.first {
-            cancelAction.handle(numberOfImages: numberOfSelectedImages)
+            cancelAction.handle(numberOfSelectedImages)
         }
     }
     
