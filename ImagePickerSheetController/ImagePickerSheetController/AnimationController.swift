@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AnimationController: NSObject, UIViewControllerAnimatedTransitioning {
+final class AnimationController: NSObject, UIViewControllerAnimatedTransitioning {
     
     let imagePickerSheetController: ImagePickerSheetController
     let presenting: Bool

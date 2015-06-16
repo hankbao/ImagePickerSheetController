@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImagePickerCollectionView: UICollectionView {
+final class ImagePickerCollectionView: UICollectionView {
     
     var bouncing: Bool {
         return contentOffset.x < -contentInset.left || contentOffset.x + frame.width > contentSize.width + contentInset.right

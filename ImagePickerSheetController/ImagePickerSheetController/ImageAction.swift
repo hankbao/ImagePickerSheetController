@@ -15,7 +15,7 @@ public enum ImageActionStyle {
 
 public typealias Title = Int -> String
 
-public class ImageAction {
+public final class ImageAction {
     
     public typealias Handler = (ImageAction) -> ()
     public typealias SecondaryHandler = (ImageAction, Int) -> ()
