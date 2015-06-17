@@ -16,6 +16,10 @@ private let tableViewEnlargedPreviewRowHeight: CGFloat = 243.0
 private let collectionViewInset: CGFloat = 5.0
 private let collectionViewCheckmarkInset: CGFloat = 3.5
 
+public enum ImagePickerSheetControllerError: ErrorType {
+    case MultipleCancelActions
+}
+
 public final class ImagePickerSheetController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate {
     
     lazy var tableView: UITableView = {
@@ -281,12 +285,11 @@ public final class ImagePickerSheetController: UIViewController, UITableViewData
     // MARK: - Actions
     
     /// Adds an new action.
-    /// Raises an exception when a second action of type .Cancel has been added.
-    public func addAction(action: ImageAction) {
+    /// Throws ImagePickerSheetControllerError.MultipleCancelActions when a second action of type .Cancel has been added.
+    public func addAction(action: ImageAction) throws {
         let cancelActions = actions.filter { $0.style == ImageActionStyle.Cancel }
         if action.style == .Cancel && cancelActions.count > 0 {
-            // precondition() would be more swifty here, but that's not really testable as of now
-            NSException(name: NSInternalInconsistencyException, reason: "ImagePickerSheetController can only have one action with a style of .Cancel", userInfo: nil).raise()
+            throw ImagePickerSheetControllerError.MultipleCancelActions
         }
         
         actions.append(action)

@@ -60,10 +60,16 @@ class ImagePickerSheetControllerSpec: QuickSpec {
         
         describe("actions") {
             it("should not add two cancel actions") {
-                imageController.addAction(ImageAction(title: "Cancel1", style: .Cancel))
-                expect {
-                    imageController.addAction(ImageAction(title: "Cancel2", style: .Cancel))
-                }.to(raiseException())
+                var caught = false
+                do {
+                    try imageController.addAction(ImageAction(title: "Cancel1", style: .Cancel))
+                    try imageController.addAction(ImageAction(title: "Cancel2", style: .Cancel))
+                }
+                catch {
+                    caught = true
+                }
+                
+                expect(caught).to(beTrue())
             }
             
             it("should add actions") {
